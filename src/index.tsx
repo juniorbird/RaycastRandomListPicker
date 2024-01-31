@@ -1,7 +1,36 @@
 import { useEffect, useState } from "react";
 import { ActionPanel, Detail, List, Action } from "@raycast/api";
 
-const pickLists = ["Places to work", "Lunch joints"]
+const placesToWork = [10,11,12]
+const lunchJoints = ["McDonalds", "Burger King", "KFC"]
+const pickLists = [{title: "Places to work", contents: placesToWork}, { title: "Lunch joints", contents: lunchJoints}]
+
+function ListParent(props: { listElements: object[],
+  navigationTitle: string,
+  searchBarPlaceholder: string,
+  onSearchTextChange: (searchText: string) => void}
+  ) {
+  return (
+    <List
+      onSearchTextChange={props.onSearchTextChange}
+      navigationTitle={props.navigationTitle}
+      searchBarPlaceholder={props.searchBarPlaceholder}
+    >
+      {props.listElements.map((list) => (
+        <List.Item
+          key={list['title']}
+          icon="list-icon.png"
+          title={list['title']}
+          actions={
+            <ActionPanel>
+              <Action.Push title="Show List" target={<Detail markdown={String(list['contents'])}/>} />
+            </ActionPanel>
+          }
+        />
+      ))}
+    </List>
+  );
+}
 
 
 
@@ -10,27 +39,15 @@ export default function Command() {
   const [filteredList, filterList] = useState(pickLists);
 
   useEffect(() => {
-    filterList(pickLists.filter((list) => list.includes(searchText)));
+    filterList(pickLists.filter((list) => list["title"].includes(searchText)));
   }, [searchText]);
 
   return (
-    <List
+    <ListParent
+      listElements={pickLists}
       onSearchTextChange={setSearchText}
       navigationTitle="Pick From Which List?"
       searchBarPlaceholder="Search your lists "
-    >
-      {filteredList.map((list) => (
-        <List.Item
-          key={list}
-          icon="list-icon.png"
-          title={list}
-          actions={
-            <ActionPanel>
-              <Action.Push title="Show Details" target={<Detail markdown="# Hey! 👋" />} />
-            </ActionPanel>
-          }
-        />
-      ))}
-    </List>
+    />
   );
 }
