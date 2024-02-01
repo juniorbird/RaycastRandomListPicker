@@ -48,12 +48,12 @@ export default function Command() {
   const [filteredList, filterList] = useState(pickLists);
 
   useEffect(() => {
-    filterList(pickLists.filter((list) => list["title"].includes(searchText)));
+    filterList(pickLists.filter((list) => list.title.toLowerCase().includes(searchText.toLowerCase())));
   }, [searchText]);
 
   return (
     <ListParent
-      listElements={pickLists}
+      listElements={filteredList}
       onSearchTextChange={setSearchText}
       navigationTitle="Pick From Which List?"
       searchBarPlaceholder="Search your lists "
