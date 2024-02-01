@@ -28,7 +28,7 @@ function ListParent(props: { listElements: ListElement[],
           title={list.title}
           actions={
             <ActionPanel>
-              <Action.Push title="Show List" target={<Detail markdown={randomPick(list.contents)}/>} />
+              <Action.Push title="Pick From This List" target={<Detail markdown={displayPick(randomPick(list.contents))} />} />
             </ActionPanel>
           }
         />
@@ -38,9 +38,14 @@ function ListParent(props: { listElements: ListElement[],
 }
 
 function randomPick(list: string[]) {
-  return String(list[Math.floor(Math.random() * list.length)]);
+  const picked = String(list[Math.floor(Math.random() * list.length)])
+  const unpicked = list.filter((item) => item !== picked)
+  return ({ picked, unpicked });
 }
 
+function displayPick(selection: { picked: string, unpicked: string[] }) {
+  return `## Picked for you:\n\n__${selection.picked}__\n\n### Unpicked:\n\n- ${selection.unpicked.join("\n\n- ")}`;
+}
 
 
 export default function Command() {
