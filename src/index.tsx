@@ -5,7 +5,12 @@ const placesToWork = [10,11,12]
 const lunchJoints = ["McDonalds", "Burger King", "KFC"]
 const pickLists = [{title: "Places to work", contents: placesToWork}, { title: "Lunch joints", contents: lunchJoints}]
 
-function ListParent(props: { listElements: object[],
+interface ListElement {
+  title: string;
+  contents: object;
+}
+
+function ListParent(props: { listElements: ListElement[],
   navigationTitle: string,
   searchBarPlaceholder: string,
   onSearchTextChange: (searchText: string) => void}
@@ -18,12 +23,12 @@ function ListParent(props: { listElements: object[],
     >
       {props.listElements.map((list) => (
         <List.Item
-          key={list['title']}
+          key={list.title}
           icon="list-icon.png"
-          title={list['title']}
+          title={list.title}
           actions={
             <ActionPanel>
-              <Action.Push title="Show List" target={<Detail markdown={String(list['contents'])}/>} />
+              <Action.Push title="Show List" target={<Detail markdown={String(list.contents)}/>} />
             </ActionPanel>
           }
         />
